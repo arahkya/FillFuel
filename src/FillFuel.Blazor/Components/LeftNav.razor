@@ -1,0 +1,22 @@
+<aside id="left-nav" class="@(IsShow ? "active" : "")">
+    <header>
+        <span>MENU</span>
+    </header>
+    <NavLink href="/" Match="NavLinkMatch.Prefix">Home</NavLink>
+    <button id="left-nav-trigger" @onclick="CloseLeftNav">
+        <i class="fa-solid fa-square-caret-left"></i>
+    </button>
+</aside>
+
+@code {
+    [Parameter]
+    public bool IsShow { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsShowChanged { get; set; }
+
+    public void CloseLeftNav()
+    {
+        IsShow = false;
+    }
+}

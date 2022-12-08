@@ -1,3 +1,19 @@
 ﻿@inherits LayoutComponentBase
 
-<main> @Body </main>
+<LeftNav @bind-IsShow="IsShowLeftNav"></LeftNav>
+<main>
+    <div id="app-bar">
+        <button @onclick="ShowLeftNav"><i class="fa-solid fa-bars"></i></button>
+    </div>
+
+    @Body
+</main>
+
+@code {
+    public bool IsShowLeftNav { get; set; }
+
+    public void ShowLeftNav()
+    {
+        IsShowLeftNav = true;
+    }
+}

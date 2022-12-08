@@ -1,3 +1,25 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+<EditForm id="FillEntryForm" EditContext="editContext" OnValidSubmit="SaveFillEntry">
+    <div class="field">
+        <label>Amount</label>
+        <InputNumber @bind-Value="fillEntry.Amount"></InputNumber>
+    </div>
+    <button>Save</button>
+</EditForm>
+
+@code {
+    private EditContext editContext = default!;
+    private FillEntryModel fillEntry = default!;
+
+    protected override void OnInitialized()
+    {
+        fillEntry = new();
+        editContext = new(fillEntry);
+    }
+
+    protected void SaveFillEntry()
+    {
+
+    }
+}
