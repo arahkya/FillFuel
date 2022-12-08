@@ -1,6 +1,7 @@
 ﻿@page "/"
+@inject IFillFuelService fillFuelService
 
-<EditForm id="FillEntryForm" EditContext="editContext" OnValidSubmit="SaveFillEntry">
+<EditForm id="FillEntryForm" EditContext="editContext" OnValidSubmit="SaveFillEntryAsync">
     <div class="field">
         <label>Amount</label>
         <InputNumber @bind-Value="fillEntry.Amount"></InputNumber>
@@ -8,18 +9,51 @@
     <button>Save</button>
 </EditForm>
 
+@foreach (FillEntryModel entity in models)
+{
+    <span>@entity.FillDate</span>
+    <span>@entity.Amount</span>
+    <button @onclick="async () => await DeleteEntryAsync(entity)">X</button>
+}
+
 @code {
+    private List<FillEntryModel> models = new();
     private EditContext editContext = default!;
     private FillEntryModel fillEntry = default!;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         fillEntry = new();
         editContext = new(fillEntry);
+
+        await LoadFillEntiesAsync();
     }
 
-    protected void SaveFillEntry()
+    private async Task LoadFillEntiesAsync()
     {
+        models = new();
+        await foreach (FuelEntryTableEntity entity in fillFuelService.ListAsync())
+        {
+            models.Add(new()
+            {
+                Id = entity.RowKey,
+                FillDate = entity.Timestamp.GetValueOrDefault().DateTime.ToLocalTime(),
+                Amount = entity.Amount
+            });
+        }
 
+        models = models.OrderByDescending(p => p.FillDate).ToList();
+    }
+
+    protected async Task SaveFillEntryAsync()
+    {
+        await fillFuelService.EntryAsync(this.fillEntry.Amount);
+        await LoadFillEntiesAsync();
+    }
+
+    protected async Task DeleteEntryAsync(FillEntryModel model)
+    {
+        await fillFuelService.DeleteAsync(model.Id);
+        await LoadFillEntiesAsync();
     }
 }
