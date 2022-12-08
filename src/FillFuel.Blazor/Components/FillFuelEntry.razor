@@ -1,0 +1,36 @@
+@inject IFillFuelService fillFuelService
+@inject IJSRuntime jsRuntime
+
+<EditForm id="FillEntryForm" EditContext="editContext" OnValidSubmit="SaveFillEntryAsync">
+    <div class="field">
+        <label>Amount</label>
+        <InputNumber id="inputAmount" @bind-Value="fillEntry.Amount"></InputNumber>
+    </div>
+    <button>Save</button>
+</EditForm>
+
+@code {
+    private EditContext editContext = default!;
+    private FillEntryModel fillEntry = default!;
+
+    [Parameter]
+    public EventCallback OnCreated { get; set; }
+
+    protected override void OnInitialized()
+    {
+        fillEntry = new();
+        editContext = new(fillEntry);
+    }
+
+    protected async Task SaveFillEntryAsync()
+    {
+        await fillFuelService.EntryAsync(this.fillEntry.Amount);
+
+        this.fillEntry.Amount = 0;
+        StateHasChanged();
+
+        await jsRuntime.InvokeVoidAsync("clearFillEntryForm");
+
+        await OnCreated.InvokeAsync();
+    }
+}

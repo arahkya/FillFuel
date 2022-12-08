@@ -1,0 +1,23 @@
+@inject IFillFuelService fillFuelService
+
+<div class="fill-fuel-item">
+    <span class="fill-date">@Model.FillDate</span>
+    <span class="fill-amount">@Model.Amount</span>
+    <button class="fill-delete" @onclick="async () => await DeleteEntryAsync(Model)">
+        <i class="fa-solid fa-trash"></i>
+    </button>
+</div>
+
+@code {
+    [Parameter]
+    public FillEntryModel Model { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<FillEntryModel> OnDelete { get; set; }
+
+    protected async Task DeleteEntryAsync(FillEntryModel model)
+    {
+        await fillFuelService.DeleteAsync(model.Id);
+        await OnDelete.InvokeAsync(model);
+    }
+}

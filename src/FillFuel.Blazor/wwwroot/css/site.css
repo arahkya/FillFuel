@@ -101,6 +101,37 @@ body>main {
     text-align: center;
 }
 
+.fill-fuel-item{
+    padding: .7rem 0;
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    grid-template-areas: 
+        "fill-amount fill-delete"
+        "fill-date fill-delete";
+    border-bottom: .1px solid lightgray;
+}
+
+.fill-fuel-item .fill-date{
+    grid-area: fill-date;
+    font-size: .7rem;
+    padding: 1rem;
+}
+
+.fill-fuel-item .fill-amount{
+    grid-area: fill-amount;
+    font-size: 1.3rem;
+    padding: .5rem 1rem;
+}
+
+.fill-fuel-item .fill-delete{
+    grid-area: fill-delete;
+    padding: .5rem 1rem;
+    background-color: transparent;
+    border: none;
+    font-size: 2rem;
+    color: lightcoral;
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
